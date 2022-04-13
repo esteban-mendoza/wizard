@@ -154,8 +154,21 @@ public class Lista<T> implements Collection<T> {
      *
      * @return El elemento eliminado.
      */
-    public T popFirst() {
-        //TODO
+
+    public T popFirst(){
+        if (longitud == 0 || cabeza == null) {
+            throw new NoSuchElementException("");
+        }
+        if (longitud == 1) {
+            T valor = cabeza.elemento;
+            cabeza = ultimo = null;
+            longitud = 0;
+            return valor;
+        }
+        T valor = cabeza.elemento;
+        cabeza = cabeza.siguiente;
+        longitud--;
+        return valor;
     }
 
     /**
@@ -222,10 +235,7 @@ public class Lista<T> implements Collection<T> {
      */
     public boolean equals(Collection<T> coleccion) {
         // lo vemos en clase
-        if (coleccion instanceof Lista) {
-            return true;
-        }
-        return false;
+        return coleccion instanceof Lista;
     }
 
 
@@ -267,15 +277,15 @@ public class Lista<T> implements Collection<T> {
     public String toString() {
         Iterador<T> iterador = new Iterador<>(this);
 
-        String string = "";
+        StringBuilder string = new StringBuilder();
         while (iterador.hasNext()) {
-            string += iterador.next();
+            string.append(iterador.next());
 
             if (iterador.hasNext())
-                string += " -> ";
+                string.append(" -> ");
         }
 
-        return string;
+        return string.toString();
     }
 
     /**

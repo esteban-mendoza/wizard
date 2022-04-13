@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 public class CLI {
 
     private static CLI instance = null;
-    private BufferedReader input;
+    private final BufferedReader input;
     private Juego juego;
 
     /**
@@ -47,7 +47,11 @@ public class CLI {
 
     /**
      * Pide un entero al usuario usando el mensaje provisto, y si el entero está entre min y max y lo devuelve.
-     * De otro modo, lanza una excepción.
+     *
+     * Si la cadena introducida por el usuario es:
+     * - r -> se muestra un resumen del juego y vuelve a pedir el entero.
+     * - q -> se muestra un resumen del juego y se termina el mismo.
+     * - h -> se muestra el historial del juego y vuelve a pedir el entero.
      *
      * @param mensaje El mensaje que se usa para pedir el entero.
      * @param min El mínimo valor que puede tomar el entero.
@@ -58,14 +62,18 @@ public class CLI {
         int numero;
 
         while (true) {
-            System.out.print(mensaje + ":\n >");
+            System.out.print(mensaje + "\n > ");
             try {
                 String linea = input.readLine();
-                numero = Integer.parseInt(linea);
 
                 if (linea.equals("h")) {
                     Juego juego = getJuego();
                     juego.mostrarHistorial();
+                }
+
+                if (linea.equals("r")) {
+                    Juego juego = getJuego();
+                    juego.mostrarResumen();
                 }
 
                 if (linea.equals("q")) {
@@ -73,6 +81,7 @@ public class CLI {
                     juego.terminar();
                 }
 
+                numero = Integer.parseInt(linea);
                 if (numero >= min && numero <= max) {
                     return numero;
                 }
@@ -92,9 +101,34 @@ public class CLI {
      * válida, la devuelve. De otro modo, lanza una excepción.
      *
      * @param mensaje El mensaje que se usa para pedir la cadena.
+     * @param validos Las formas válidas que puede tomar la cadena.
      * @return La cadena introducida por el usuario.
      */
     public String pedirCadena(String mensaje, String[] validos) {
+        String cadena;
+
+        while (true) {
+            System.out.print(mensaje + "\n > ");
+
+            try {
+                cadena = input.readLine();
+
+                if (validos == null) {
+                    return cadena;
+                }
+
+                for (String valido : validos) {
+                    if (cadena.equals(valido)) {
+                        return cadena;
+                    }
+                }
+
+                System.out.println("La opción introducida no es válida. Intente de nuevo.");
+
+            } catch (IOException e) {
+                System.out.println("Error al leer la entrada. Intente de nuevo.");
+            }
+        }
 
     }
 }
