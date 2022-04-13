@@ -16,8 +16,37 @@ public class Carta {
         return palo;
     }
 
+    /**
+     * Devuelve una cadena con el color de la carta según el palo:
+     * - Si es humano, azul.
+     * - Si es elfo, verde.
+     * - Si es enano, rojo.
+     * - Si es gigante, amarillo.
+     * - Si son magos (Z, con valor 14) o bufones (N, con valor 0), blanco.
+     *
+     * @return Representación de la carta.
+     */
     public String toString(){
-        return numero + " de " + palo;
+        String color = "";
+        switch(palo){
+            case "Humano":
+                color = "azul";
+                break;
+            case "Elfo":
+                color = "verde";
+                break;
+            case "Enano":
+                color = "rojo";
+                break;
+            case "Gigante":
+                color = "amarillo";
+                break;
+            case "Magos":
+            case "Bufones":
+                color = "blanco";
+                break;
+        }
+        return numero + " de " + color;
     }
 
     public boolean equals(Carta carta){
@@ -43,4 +72,6 @@ public class Carta {
     public boolean esIgual(Carta carta){
         return numero == carta.numero;
     }
+
+
 }

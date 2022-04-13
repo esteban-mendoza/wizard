@@ -2,7 +2,6 @@ package utils.colecciones;
 
 import java.util.NoSuchElementException;
 
-// Iterador
 class Iterador<T> implements IteradorLista<T> {
     private final Lista<T> lista;
     public Nodo<T> anterior;

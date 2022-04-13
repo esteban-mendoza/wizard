@@ -1,9 +1,12 @@
 package utils.colecciones;
 
 public class Pila<T> extends PushPop<T>{
-    
-    
-    // Agregar al inicio.
+
+
+    /**
+     * Agrega un elemento al inicio de la pila.
+     * @param elemento el elemento a agregar.
+     */
     public void push(T elemento){
         if(elemento == null){
             throw new IllegalArgumentException("");

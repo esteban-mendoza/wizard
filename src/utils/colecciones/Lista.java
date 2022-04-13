@@ -9,10 +9,10 @@ public class Lista<T> implements Collection<T> {
     public Nodo<T> ultimo;
     public int longitud;
 
-    Lista() {
+    public Lista() {
     }
 
-    Lista(T[] elementos) {
+    public Lista(T[] elementos) {
         for (T elemento : elementos) {
             add(elemento);
         }
@@ -147,6 +147,15 @@ public class Lista<T> implements Collection<T> {
         ultimo.siguiente = null;
         longitud--;
         return valor;
+    }
+
+    /**
+     * Regresa el primer elemento de la lista y lo elimina.
+     *
+     * @return El elemento eliminado.
+     */
+    public T popFirst() {
+        //TODO
     }
 
     /**
