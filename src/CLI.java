@@ -100,6 +100,11 @@ public class CLI {
      * Pide una cadena al usuario usando el mensaje provisto, y si la cadena no está vacía y es una cadena
      * válida, la devuelve. De otro modo, lanza una excepción.
      *
+     * Si la cadena introducida por el usuario es:
+     * - r -> se muestra un resumen del juego y vuelve a pedir la cadena.
+     * - q -> se muestra un resumen del juego y se termina el mismo.
+     * - h -> se muestra el historial del juego y vuelve a pedir la cadena.
+     *
      * @param mensaje El mensaje que se usa para pedir la cadena.
      * @param validos Las formas válidas que puede tomar la cadena.
      * @return La cadena introducida por el usuario.

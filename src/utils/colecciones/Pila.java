@@ -2,7 +2,6 @@ package utils.colecciones;
 
 public class Pila<T> extends PushPop<T>{
 
-
     /**
      * Agrega un elemento al inicio de la pila.
      * @param elemento el elemento a agregar.
