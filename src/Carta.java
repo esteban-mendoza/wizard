@@ -1,3 +1,6 @@
+import static utils.constantes.Colores.BLANCO;
+import static utils.constantes.Colores.NEUTRO;
+
 /**
  * CLase que representa una carta de una baraja.
  */
@@ -10,31 +13,32 @@ public class Carta {
     private Palo palo;
 
     /**
-     * Constructor publico.
-     * @param numero
-     * @param palo
+     * Constructor público.
+     * @param numero número de la carta.
+     * @param palo palo de la carta.
      */
-    public Carta(int numero, Palo palo){
+    public Carta(int numero, String palo){
         this.numero = numero;
-        this.palo = palo;
+        this.palo = new Palo(palo);
     }
+
     /**
-     * Metodo que devuelve el numero de la carta.
-     * @return numero
+     * Método que devuelve el número de la carta.
+     * @return numero de la carta.
      */
     public int getNumero(){
         return numero;
     }
     /**
-     * Metodo que devuelve el palo de la carta.
-     * @return palo
+     * Método que devuelve el palo de la carta.
+     * @return palo de la carta.
      */
     public Palo getPalo(){
         return palo;
     }
 
     /**
-     * Devuelve una cadena con el color de la carta según el palo:
+     * Devuelve una cadena con el color de la carta según el palo o el número.
      * - Si es humano, azul.
      * - Si es elfo, verde.
      * - Si es enano, rojo.
@@ -44,33 +48,12 @@ public class Carta {
      * @return Representación de la carta.
      */
     public String toString(){
-        String color = "";
-        switch(palo){
-            case "Humano":
-                color = "\u001B[34mazul";
-                break;
-            case "Elfo":
-                color = "\u001B[32mverde";
-                break;
-            case "Enano":
-                color = "\u001B[31rojo";
-                break;
-            case "Gigante":
-                color = "\u001B[33mamarillo";
-                break;
-            case "Mago":
-            case "Bufon":
-                color = "\u001B[0mblanco";
-                break;
+        switch (numero) {
+            case 0: return "[" + BLANCO + "N" + NEUTRO + "]";
+            case 14: return "[" + BLANCO + "Z" + NEUTRO + "]";
         }
-        return numero + " de " + color;
+
+        return "[" + palo.getColor() + numero + NEUTRO + "]";
     }
 
-    /**
-     * Determina si la carta es válida para una jugada.
-     */
-    public boolean esValida(Palo lider, Palo triunfo){
-        //TODO: Implementar
-        return true;
-    }
 }
