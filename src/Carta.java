@@ -67,60 +67,10 @@ public class Carta {
     }
 
     /**
-     * Compara si dos cartas son iguales.
-     * @param carta
-     * @return
+     * Determina si la carta es válida para una jugada.
      */
-    public boolean equals(Carta carta){
-        return numero == carta.numero && palo.equals(carta.palo);
-    }
-    /**
-     * Compara si una carta es menor que otra.
-     * @param carta
-     * @return
-     */
-    public boolean menorQue(Carta carta){
-        return numero < carta.numero;
-    }
-    /**
-     * Compara si una carta es mayor que otra.
-     * @param carta
-     * @return
-     */
-    public boolean mayorQue(Carta carta){
-        return numero > carta.numero;
-    }
-    /**
-     * Compara si una carta es menor o igual que otra.
-     * @param carta
-     * @return
-     */
-    public boolean menorOIgualQue(Carta carta){
-        return numero <= carta.numero;
-    }
-    /**
-     * Compara si una carta es mayor o igual que otra.
-     * @param carta
-     * @return
-     */
-    public boolean mayorOIgualQue(Carta carta){
-        return numero >= carta.numero;
-    }
-    /**
-     * Compara si una carta es igual a otra.
-     * @param carta
-     * @return
-     */
-    public boolean esIgual(Carta carta){
-        return numero == carta.numero;
-    }
-
-    /**
-     * Compara si una carta es distinta a otra.
-     * @param carta
-     * @return
-     */
-    public boolean esDistinto(Carta carta){
-        return numero != carta.numero;
+    public boolean esValida(Palo lider, Palo triunfo){
+        //TODO: Implementar
+        return true;
     }
 }
