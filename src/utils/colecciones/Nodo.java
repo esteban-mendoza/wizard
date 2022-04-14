@@ -1,6 +1,6 @@
 package utils.colecciones;
 
-class Nodo<T> {
+ public class Nodo<T> {
     public T elemento;
     public Nodo<T> anterior;
     public Nodo<T> siguiente;

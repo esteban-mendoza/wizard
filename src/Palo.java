@@ -91,12 +91,22 @@ public class Palo {
         }
         return false;
     }
+
+    /**
+     * metodo que verifica si el palo es lider.
+     * @return
+     */
     public boolean esLider(){
         if (this.lider == true && this.triunfo == false) {
             return true;
         }
         return false;
     }
+
+    /**
+     * metodo que verifica si el palo es de triunfo.
+     * @return
+     */
     public boolean esTriunfo(){
         if (this.triunfo == true && this.lider == false) {
             return true;

@@ -7,14 +7,14 @@ public class Carta {
      *
      */
     private int numero;
-    private String palo;
+    private Palo palo;
 
     /**
      * Constructor publico.
      * @param numero
      * @param palo
      */
-    public Carta(int numero, String palo){
+    public Carta(int numero, Palo palo){
         this.numero = numero;
         this.palo = palo;
     }
@@ -29,7 +29,7 @@ public class Carta {
      * Metodo que devuelve el palo de la carta.
      * @return palo
      */
-    public String getPalo(){
+    public Palo getPalo(){
         return palo;
     }
 
