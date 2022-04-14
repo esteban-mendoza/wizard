@@ -2,7 +2,6 @@ package utils.colecciones;
 
 import java.util.NoSuchElementException;
 
-
 public class Lista<T> implements Collection<T> {
 
     public Nodo<T> cabeza;
@@ -240,35 +239,6 @@ public class Lista<T> implements Collection<T> {
 
 
     /**
-     * Método que invierte el orden de la lista.
-     */
-    public void reverse() {
-
-        if (size() <= 1)
-            return;
-
-        Nodo<T> aux;
-
-        // Intercambia referencias de cabeza y último
-        aux = cabeza;
-        cabeza = ultimo;
-        ultimo = aux;
-
-        Iterador<T> iterador = new Iterador<>(this);
-
-        // Intercambia referencias de anterior y siguiente para cada nodo
-        while (iterador.hasNext()) {
-            Nodo<T> actual = iterador.siguiente;
-
-            aux = actual.anterior;
-            actual.anterior = actual.siguiente;
-            actual.siguiente = aux;
-
-            iterador.next();
-        }
-    }
-
-    /**
      * Regresa una representación en cadena de la colección.
      *
      * @return una representación en cadena de la colección:
@@ -332,54 +302,54 @@ public class Lista<T> implements Collection<T> {
     }
 
     /**
-     * Inserta un elemento en un índice explícito.
-     * <p>
-     * Si el índice es menor que cero, el elemento se agrega al inicio de la
-     * lista. Si el índice es mayor o igual que el número de elementos en la
-     * lista, el elemento se agrega al final de la misma. En otro caso, después
-     * de mandar llamar el método, el elemento tendrá el índice que se
-     * especifica en la lista.
-     *
-     * @param i        El índice donde insertar el elemento. Si es menor que 0 el
-     *                 elemento se agrega al inicio, y si es mayor o igual que el
-     *                 número de elementos en la lista se agrega al final.
-     * @param elemento el elemento a insertar.
-     * @throws IllegalArgumentException si <code>elemento</code> es
-     *                                  <code>null</code>
+     * Devuelve una representación en arreglo de la lista.
      */
-    public void insert(int i, T elemento) {
-
-        if (elemento == null)
-            throw new IllegalArgumentException("Elemento es null");
-
-        if (i <= 0) {
-            agregaInicio(elemento);
-            return;
-        }
-
-        if (i >= size()) {
-            agregaFinal(elemento);
-            return;
-        }
-
+    public T[] asArray() {
         Iterador<T> iterador = new Iterador<>(this);
+        T[] array = (T[]) new Object[longitud];
 
-        // Mueve el iterador hasta la posición deseada
-        for (int j = 0; j < i; j++) {
+        for (int i = 0; i < longitud; i++) {
+            array[i] = iterador.next();
+        }
+
+        return array;
+    }
+
+    /**
+     * Elimina el i-ésimo elemento de la lista y lo regresa.
+     * @param index posición del elemento a eliminar.
+     * @return el elemento eliminado.
+     */
+    public T popIndex(int index) {
+        if (index < 0 || index >= longitud)
+            throw new IndexOutOfBoundsException("El índice está fuera de rango");
+
+        if (index == 0) {
+            T elemento = cabeza.elemento;
+            cabeza = cabeza.siguiente;
+            cabeza.anterior = null;
+            longitud--;
+            return elemento;
+        }
+
+        if (index == longitud - 1) {
+            T elemento = ultimo.elemento;
+            ultimo = ultimo.anterior;
+            ultimo.siguiente = null;
+            longitud--;
+            return elemento;
+        }
+
+        Iterador<T> iterador = iterador();
+        for (int i = 0; i < index; i++) {
             iterador.next();
         }
 
-        // Crea nodo de lista
-        Nodo<T> nuevoNodo = new Nodo<>(elemento);
-
-        nuevoNodo.anterior = iterador.anterior;
-        nuevoNodo.siguiente = iterador.siguiente;
-
-        // Inserta elemento en la lista
-        iterador.anterior.siguiente = nuevoNodo;
-        iterador.siguiente.anterior = nuevoNodo;
-
-        longitud++;
+        T elemento = iterador.next();
+        iterador.anterior.siguiente = iterador.siguiente;
+        iterador.siguiente.anterior = iterador.anterior;
+        longitud--;
+        return elemento;
     }
 
     /**

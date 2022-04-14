@@ -71,13 +71,6 @@ public interface Collection<T> {
      * @return una representación en cadena de la colección.
      */
     String toString();
-    
-    /**
-     * Método que invierte el orden de la colección.
-     * 
-     */
-    void reverse();
-
     /**
      * Regresa una copia de la colección.
      * 
