@@ -4,6 +4,9 @@ import java.io.InputStreamReader;
 
 /**
  * Esta clase contiene los métodos para la ejecución de comandos en la consola.
+ *
+ * Notemos que esta clase utiliza el patrón Singleton, por lo que debe utilizarse siempre como
+ * > cli = CLI.getInstance();
  */
 public class CLI {
 
