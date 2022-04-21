@@ -1,3 +1,5 @@
+import utils.colecciones.Lista;
+
 /**
  * Clase que implementa las acciones de un jugador.
  */
@@ -19,21 +21,19 @@ public class Jugador {
     }
 
     /**
-     * Método que muestra las cartas válidas e inválidas para jugar,
+     * Método que muestra las cartas en la mano, muestra las cartas válidas para jugar,
      * pide al usuario que seleccione una carta y devuelve la carta seleccionada.
      * @param lider palo líder del truco.
-     * @param triunfo palo del triunfo de la ronda.
      */
-    public Carta elegirCarta(Palo lider, Palo triunfo) {
+    public Carta elegirCarta(Palo lider) {
 
-        mano.mostrarValidas(lider, triunfo);
-        mano.mostrarInvalidas(lider, triunfo);
+        mano.mostrar();
+        Lista<Integer> validas = mano.obtenerValidas(lider);
 
         cli = CLI.getInstance();
-        int indice = cli.pedirEntero("Introduce la carta que quieres jugar: ",
-                0, mano.getCartas().size()-1);
+        int indice = cli.pedirEntero("Introduce alguno de los índices válidos: " + validas, validas.asArray());
 
-        return mano.getCartas().popIndex(indice);
+        return mano.devolverCarta(indice);
     }
 
     /**

@@ -51,10 +51,12 @@ public class CLI {
     /**
      * Pide un entero al usuario usando el mensaje provisto, y si el entero está entre min y max y lo devuelve.
      *
-     * Si la cadena introducida por el usuario es:
-     * - r -> se muestra un resumen del juego y vuelve a pedir el entero.
-     * - q -> se muestra un resumen del juego y se termina el mismo.
-     * - h -> se muestra el historial del juego y vuelve a pedir el entero.
+     * <p>Si la cadena introducida por el usuario es:
+     * <ul>
+     *     <li>r -> se muestra un resumen del juego y vuelve a pedir la cadena.</li>
+     *     <li>q -> se muestra un resumen del juego y se termina el mismo.</li>
+     *     <li>h -> se muestra el historial del juego y vuelve a pedir la cadena.</li>
+     * </ul></p>
      *
      * @param mensaje El mensaje que se usa para pedir el entero.
      * @param min El mínimo valor que puede tomar el entero.
@@ -90,6 +92,70 @@ public class CLI {
                 }
 
                 System.out.println("El número debe estar entre " + min + " y " + max + ".");
+
+            } catch (IOException e) {
+                System.out.println("Error al leer la entrada. Intente de nuevo.");
+            } catch (NumberFormatException e) {
+                System.out.println("El valor introducido no es un número. Intente de nuevo.");
+            }
+        }
+    }
+
+    /**
+     * Pide un entero al usuario usando el mensaje provisto, y si el entero está en el array de válidos lo devuelve.
+     *
+     * <p>
+     * Si la cadena introducida por el usuario es:
+     * <ul>
+     *     <li>r -> se muestra un resumen del juego y vuelve a pedir la cadena.</li>
+     *     <li>q -> se muestra un resumen del juego y se termina el mismo.</li>
+     *     <li>h -> se muestra el historial del juego y vuelve a pedir la cadena.</li>
+     * </ul></p>
+     *
+     * @param mensaje El mensaje que se usa para pedir el entero.
+     * @param validos Los valores válidos que puede tomar el entero.
+     * @return El entero introducido por el usuario.
+     */
+    public int pedirEntero(String mensaje, int[] validos) {
+        int numero;
+
+        while (true) {
+            System.out.print(mensaje + "\n > ");
+            try {
+                String linea = input.readLine();
+
+                if (linea.equals("h")) {
+                    Juego juego = getJuego();
+                    juego.mostrarHistorial();
+                }
+
+                if (linea.equals("r")) {
+                    Juego juego = getJuego();
+                    juego.mostrarResumen();
+                }
+
+                if (linea.equals("q")) {
+                    Juego juego = getJuego();
+                    juego.terminar();
+                }
+
+                numero = Integer.parseInt(linea);
+                for (int valido: validos) {
+                    if (numero == valido)
+                        return numero;
+                }
+
+                StringBuilder validosString = new StringBuilder("{");
+                for (int i = 0; i < validos.length; i++) {
+                    validosString.append(validos[i]);
+
+                    if (i < validos.length - 1)
+                        validosString.append(", ");
+                }
+                validosString.append("}");
+                System.out.println("El número debe ser alguno de los siguientes: " + validosString + ".");
+
+
 
             } catch (IOException e) {
                 System.out.println("Error al leer la entrada. Intente de nuevo.");
