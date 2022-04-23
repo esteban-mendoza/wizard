@@ -28,6 +28,14 @@ public class Mano {
     }
 
     /**
+     * Recibe una carta y la agrega a la mano.
+     * @param carta La carta a agregar.
+     */
+    public void recibirCarta(Carta carta) {
+        cartas.add(carta);
+    }
+
+    /**
      * Determina las cartas que el jugador puede jugar.
      * @param lider El palo del líder del truco.
      * @return Un arreglo con los índices de las cartas que el jugador puede jugar.
