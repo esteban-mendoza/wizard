@@ -39,19 +39,11 @@ public class Baraja {
     }
 
     /**
-     * Devuelve la baraja.
-     * @return la baraja.
+     * Determine si la baraja está vacía.
+     * @return <code>true</code> si la baraja está vacía, <code>false</code> en caso contrario.
      */
-    public Lista<Carta> getCartas() {
-        return baraja;
-    }
-
-    /**
-     * Devuelve la baraja.
-     * @return la baraja.
-     */
-    public Lista<Carta> getBaraja() {
-        return baraja;
+    public boolean estaVacia() {
+        return baraja.isEmpty();
     }
 
 }
