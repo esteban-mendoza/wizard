@@ -10,11 +10,15 @@ public class ListaCircular<T> extends Lista<T> {
     public Nodo<T> cabeza;
     public Nodo<T> ultimo;
     public int longitud;
+    Iterador<T> iterador;
 
     public ListaCircular() {
+        iterador = new Iterador<>(this);
     }
 
     public ListaCircular(T[] elementos) {
+        iterador = new Iterador<>(this);
+
         for (T elemento : elementos) {
             add(elemento);
         }
@@ -441,20 +445,30 @@ public class ListaCircular<T> extends Lista<T> {
     }
 
     /**
-     * Regresa un iterador para recorrer la lista en una dirección
+     * Regresa un iterador para recorrer la lista en una dirección.
+     *
+     * <p>
+     * Observe que este método no crea un iterador, sino que regresa una referencia
+     * al iterador interno. Si desea iterar desde la cabeza de la lista, use <code>iterador.start()</code>.
+     * </p>
      *
      * @return un iterador para recorrer la lista en una dirección.
      */
     public Iterador<T> iterador() {
-        return new Iterador<>(this);
+        return iterador;
     }
 
     /**
      * Regresa un iterador para recorrer la lista en ambas direcciones.
      *
+     * <p>
+     * Observe que este método no crea un iterador, sino que regresa una referencia
+     * al iterador interno. Si desea iterar desde la cabeza de la lista, use <code>iterador.start()</code>.
+     * </p>
+     *
      * @return un iterador para recorrer la lista en ambas direcciones.
      */
     public IteradorLista<T> iteradorLista() {
-        return new Iterador<>(this);
+        return iterador;
     }
 }
