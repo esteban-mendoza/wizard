@@ -1,6 +1,7 @@
 package utils.colecciones;
 
 import java.util.NoSuchElementException;
+import java.util.Random;
 
 public class Lista<T> implements Collection<T> {
 
@@ -153,7 +154,6 @@ public class Lista<T> implements Collection<T> {
      *
      * @return El elemento eliminado.
      */
-
     public T popFirst(){
         if (longitud == 0 || cabeza == null) {
             throw new NoSuchElementException("");
@@ -226,34 +226,45 @@ public class Lista<T> implements Collection<T> {
     }
 
     /**
-     * Nos dice si la colección es igual a otra colección recibida.
+     * Nos dice si la lista es igual a otra.
      *
-     * @param coleccion la colección con el que hay que comparar.
-     * @return <tt>true</tt> si la colección es igual a la colección recibido
+     * @param lista la colección con el que hay que comparar.
+     * @return <tt>true</tt> si la lista es igual a <tt>lista</tt>,
      * <tt>false</tt> en otro caso.
      */
-    public boolean equals(Collection<T> coleccion) {
-        // lo vemos en clase
-        return coleccion instanceof Lista;
+    public boolean equals(Lista<T> lista) {
+        if (lista == null)
+            return false;
+        if (lista.longitud != longitud)
+            return false;
+        Nodo<T> n = cabeza;
+        Nodo<T> m = lista.cabeza;
+        while (n != null) {
+            if (!n.elemento.equals(m.elemento))
+                return false;
+            n = n.siguiente;
+            m = m.siguiente;
+        }
+        return true;
     }
-
 
     /**
      * Regresa una representación en cadena de la colección.
      *
      * @return una representación en cadena de la colección:
-     * Lista(a, b, c, d)
+     * [a, b, c, d]
      */
     public String toString() {
         Iterador<T> iterador = new Iterador<>(this);
 
-        StringBuilder string = new StringBuilder();
+        StringBuilder string = new StringBuilder("[");
         while (iterador.hasNext()) {
             string.append(iterador.next());
 
             if (iterador.hasNext())
-                string.append(" -> ");
+                string.append(", ");
         }
+        string.append("]");
 
         return string.toString();
     }
@@ -302,20 +313,6 @@ public class Lista<T> implements Collection<T> {
     }
 
     /**
-     * Devuelve una representación en arreglo de la lista.
-     */
-    public T[] asArray() {
-        Iterador<T> iterador = new Iterador<>(this);
-        T[] array = (T[]) new Object[longitud];
-
-        for (int i = 0; i < longitud; i++) {
-            array[i] = iterador.next();
-        }
-
-        return array;
-    }
-
-    /**
      * Elimina el i-ésimo elemento de la lista y lo regresa.
      * @param index posición del elemento a eliminar.
      * @return el elemento eliminado.
@@ -346,10 +343,37 @@ public class Lista<T> implements Collection<T> {
         }
 
         T elemento = iterador.next();
-        iterador.anterior.siguiente = iterador.siguiente;
-        iterador.siguiente.anterior = iterador.anterior;
+        iterador.anterior.anterior.siguiente = iterador.siguiente;
+        iterador.siguiente.anterior = iterador.anterior.anterior;
         longitud--;
         return elemento;
+    }
+
+    /**
+     * Revuelve la lista.
+     * @param semilla semilla aleatoria.
+     */
+    public void shuffle(int semilla) {
+
+        Random random = new Random(semilla);
+
+        if (longitud <= 1)
+            return;
+
+        for (int i = longitud; i > 0; i--) {
+            int randomIndex = random.nextInt(i);
+
+            T elemento = popIndex(randomIndex);
+            add(elemento);
+        }
+    }
+
+    /**
+     * Revuelve la lista.
+     */
+    public void shuffle() {
+        Random random = new Random();
+        shuffle(random.nextInt());
     }
 
     /**
