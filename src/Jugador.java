@@ -9,15 +9,15 @@ public class Jugador {
     private CLI cli;
 
     Jugador(){
-        pedirNombre();
+        this.nombre = pedirNombre();
     }
 
     /**
      * Método que pide al usuario el nombre del jugador.
      */
-    private void pedirNombre() {
+    private String pedirNombre() {
         cli = CLI.getInstance();
-        nombre = cli.pedirCadena("Introduce tu el nombre del jugador: ", null);
+        return cli.pedirCadena("Introduce el nombre del jugador: ", null, false);
     }
 
     /**
@@ -31,7 +31,7 @@ public class Jugador {
         Lista<Integer> validas = mano.obtenerValidas(lider);
 
         cli = CLI.getInstance();
-        int indice = cli.pedirEntero("Introduce alguno de los índices válidos: " + validas, validas.asArray());
+        int indice = cli.pedirEntero("Introduce alguno de los índices válidos: " + validas, validas, true);
 
         return mano.devolverCarta(indice);
     }
@@ -58,4 +58,25 @@ public class Jugador {
     public Mano getMano() {
         return mano;
     }
+
+    /**
+     * Método que recibe una carta y la añade a la mano del jugador.
+     * @param carta carta a añadir.
+     */
+    public void recibirCarta(Carta carta) {
+        mano.recibirCarta(carta);
+    }
+
+    /**
+     * Método que pide al jugador que elija un palo de triunfo.
+     * @return palo de triunfo elegido.
+     */
+    public Palo elegirPalo() {
+        Lista<String> palos = new Lista<>(new String[]{"enanos", "elfos", "gigantes", "humanos"});
+
+        cli = CLI.getInstance();
+        String palo = cli.pedirCadena("Introduce el palo de triunfo: ", palos, true);
+        return new Palo(palo);
+    }
+
 }
