@@ -48,6 +48,7 @@ public class Juego {
         System.out.println("==========================================================");
         System.out.println("Ha concluido la partida.");
         mostrarResumen();
+        System.exit(0);
     }
 
     /**

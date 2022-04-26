@@ -7,4 +7,9 @@ Autores:
 
 ## ¿Cómo jugar?
 
+Para jugar, compile y ejecute `Main.java`.
+
 ## Organización
+
+Carlos creó algunas clases básicas como Carta, Palo, etc. 
+Jorge pulió las clases básicas e implementó la lógica de la Partida, Truco, y debuggeó el juego final.
