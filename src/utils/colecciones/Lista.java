@@ -135,13 +135,37 @@ public class Lista<T> implements Collection<T> {
         return true;
     }
 
+    /**
+     * Obtiene el primer elemento de la lista sin eliminarlo.
+     * @return el primer elemento de la lista.
+     */
+    public T peekFirst() {
+        return cabeza.elemento;
+    }
+
+    /**
+     * Obtiene el ultimo elemento de la lista sin eliminarlo.
+     * @return ultimo elemento de la lista
+     */
+    public T peekLast() {
+        return ultimo.elemento;
+    }
 
     /**
      * Regresa el último elemento de la lista y lo elimina.
      *
      * @return El elemento eliminado.
+     * @throws NoSuchElementException si la lista está vacía.
      */
     public T pop() {
+        if (longitud == 0 || cabeza == null) {
+            throw new NoSuchElementException("La lista está vacía");
+        }
+        if (longitud == 1) {
+            T elemento = cabeza.elemento;
+            empty();
+            return elemento;
+        }
         T valor = ultimo.elemento;
         ultimo = ultimo.anterior;
         ultimo.siguiente = null;
@@ -320,6 +344,13 @@ public class Lista<T> implements Collection<T> {
     public T popIndex(int index) {
         if (index < 0 || index >= longitud)
             throw new IndexOutOfBoundsException("El índice está fuera de rango");
+
+        if (longitud == 1) {
+            T elemento = cabeza.elemento;
+            cabeza = ultimo = null;
+            longitud = 0;
+            return elemento;
+        }
 
         if (index == 0) {
             T elemento = cabeza.elemento;
