@@ -1,3 +1,4 @@
+import utils.colecciones.IteradorLista;
 import utils.colecciones.Lista;
 
 /**
@@ -7,9 +8,12 @@ public class Jugador {
     private String nombre;
     private Mano mano;
     private CLI cli;
+    private Lista<Resultado> resultados;
 
     Jugador(){
         this.nombre = pedirNombre();
+        this.mano = new Mano();
+        this.resultados = new Lista<>();
     }
 
     /**
@@ -17,7 +21,68 @@ public class Jugador {
      */
     private String pedirNombre() {
         cli = CLI.getInstance();
-        return cli.pedirCadena("Introduce el nombre del jugador: ", null, false);
+        return cli.pedirCadena("Introduce el nombre del jugador: ");
+    }
+
+    /**
+     * Método que genera el resultado de una nueva ronda.
+     * @param puntos puntos obtenidos hasta el momento.
+     * @param apuesta apuesta del jugador.
+     */
+    public void nuevoResultado(int puntos, int apuesta) {
+        resultados.add(new Resultado(puntos, apuesta));
+    }
+
+    /**
+     * Método que devuelve la puntación actual del jugador.
+     * @return puntación actual del jugador.
+     */
+    public int getPuntos() {
+        return resultados.peekLast().getPuntos();
+    }
+
+    /**
+     * Método que aumenta en 1 la cantidad de trucos ganados en la ronda.
+     */
+    public void ganarTruco() {
+        resultados.peekLast().ganarTruco();
+    }
+
+    /**
+     * Método que calcula la puntuación del jugador al final de la partida.
+     */
+    public void finalizarRonda() {
+        resultados.peekLast().actualizarPuntos();
+    }
+
+    /**
+     * Muestra el resultado de la última ronda para el jugador.
+     */
+    public void mostrarResultado() {
+        System.out.print("Jugador " + nombre + ". ");
+        System.out.println(resultados.peekLast());
+    }
+
+    /**
+     * Muestra el resultado determinado.
+     * @param nRonda número de la ronda.
+     */
+    public void mostrarResultado(int nRonda) {
+        IteradorLista<Resultado> it = resultados.iterador();
+        it.start();
+
+        for (int i = 0; i < nRonda; i++) {
+            if (!it.hasNext()) {
+                return;
+            }
+
+            Resultado resultado = it.next();
+
+            if (i == nRonda - 1) {
+                System.out.println("Jugador " + nombre + ". " + resultado);
+                return;
+            }
+        }
     }
 
     /**
@@ -27,8 +92,15 @@ public class Jugador {
      */
     public Carta elegirCarta(Palo lider) {
 
+        System.out.print("Jugador " + nombre + ". ");
         mano.mostrar();
         Lista<Integer> validas = mano.obtenerValidas(lider);
+
+        if (validas.longitud == 1) {
+            Carta carta = mano.devolverCarta(validas.popFirst());
+            System.out.println("Solo puedes jugar la carta " + carta + ". Dicha carta será jugada.");
+            return carta;
+        }
 
         cli = CLI.getInstance();
         int indice = cli.pedirEntero("Introduce alguno de los índices válidos: " + validas, validas, true);
@@ -41,14 +113,6 @@ public class Jugador {
      */
     public String getNombre() {
         return nombre;
-    }
-
-    /**
-     * Método que establece la mano del jugador.
-     * @param mano mano del jugador.
-     */
-    public void setMano(Mano mano) {
-        this.mano = mano;
     }
 
     /**
@@ -72,11 +136,57 @@ public class Jugador {
      * @return palo de triunfo elegido.
      */
     public Palo elegirPalo() {
-        Lista<String> palos = new Lista<>(new String[]{"enanos", "elfos", "gigantes", "humanos"});
+
+        System.out.print("Jugador " + nombre + ". ");
+        mano.mostrar();
 
         cli = CLI.getInstance();
-        String palo = cli.pedirCadena("Introduce el palo de triunfo: ", palos, true);
-        return new Palo(palo);
+        Palo palo = cli.pedirPalo("Elige el palo de triunfo: ");
+        return palo;
     }
 
+    /**
+     * Método que pide al jugador que elija una apuesta.
+     * @param apuestaMaxima apuesta máxima.
+     * @return apuesta elegida.
+     */
+    public int elegirApuesta(int apuestaMaxima) {
+        System.out.println("Jugador " + nombre + ":");
+        mano.mostrar();
+
+        cli = CLI.getInstance();
+        return cli.pedirEntero("Introduce la apuesta: ", 0, apuestaMaxima, true);
+    }
+
+    /**
+     * Método que muestra la apuesta del jugador en la ronda especificada.
+     * @param nRonda número de la ronda.
+     */
+    public void mostrarApuesta(int nRonda) {
+        IteradorLista<Resultado> it = resultados.iterador();
+        it.start();
+
+        for (int i = 0; i < nRonda; i++) {
+
+            if (!it.hasNext()) {
+                return;
+            }
+
+            Resultado resultado = it.next();
+
+            if (i == nRonda - 1) {
+                System.out.println("Jugador " + nombre + ". Apuesta: " + resultado.getApuesta());
+                return;
+            }
+        }
+    }
+
+    /**
+     * Método que devuelve el nombre del jugador.
+     * @return nombre del jugador.
+     */
+    @Override
+    public String toString() {
+        return nombre;
+    }
 }
