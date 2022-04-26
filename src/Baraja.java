@@ -34,8 +34,8 @@ public class Baraja {
     /**
      * Revuelve la baraja.
      */
-    public void revolver() {
-        baraja.shuffle();
+    public void revolver(int semilla) {
+        baraja.shuffle(semilla);
     }
 
     /**
