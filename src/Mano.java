@@ -6,6 +6,10 @@ public class Mano {
 
     private Lista<Carta> cartas;
 
+    public Mano() {
+        cartas = new Lista<>();
+    }
+
     public Mano(Carta[] cartas) {
         this.cartas = new Lista<>(cartas);
     }
@@ -44,15 +48,24 @@ public class Mano {
 
         Lista<Integer> validas = new Lista<>();
 
+        // Si el palo del líder es nulo, se puede jugar cualquier carta.
+        if (lider == null) {
+            for (int i = 0; i < cartas.size(); i++) {
+                validas.add(i);
+            }
+            return validas;
+        }
+
         Iterator<Carta> it = cartas.iterador();
         int indice = 0;
         boolean existeCartaDelPaloLider = false;
 
-        // Los wizards y jokers son válidos, además de las cartas del palo líder
+        // Las cartas distintas de wizard y joker que sean del palo líder son válidas.
+        // También los wizard y joker de cualquier palo.
         while (it.hasNext()) {
             Carta c = it.next();
 
-            if (c.getPalo().equals(lider)) {
+            if (c.getPalo().equals(lider) && (c.getNumero() != 0 && c.getNumero() != 14)) {
                 validas.add(indice);
                 existeCartaDelPaloLider = true;
                 indice++;
@@ -62,13 +75,14 @@ public class Mano {
             if (c.getNumero() == 0 || c.getNumero() == 14) {
                 validas.add(indice);
                 indice++;
+                continue;
             }
+
+            indice++;
         }
 
-        // Si no existe palo líder en el truco, o si la mano no tiene cartas del palo líder
-        // todas las cartas son válidas
-        if (lider == null || !existeCartaDelPaloLider) {
-
+        // Si la mano no tiene cartas del palo líder todas las cartas son válidas
+        if (!existeCartaDelPaloLider) {
             validas = new Lista<>();
 
             for (int i = 0; i < cartas.size(); i++) {
