@@ -1,114 +1,187 @@
+import utils.colecciones.IteradorLista;
 import utils.colecciones.Lista;
-import utils.colecciones.Nodo;
+import utils.colecciones.ListaCircular;
 
 public class Truco {
-    private Palo paloTriunfo;
-    private Palo paloLider;
-    private Lista<Carta> cartas;
-    private Carta valiosa;
+    private Palo triunfo;
+    private Palo lider;
+    private Lista<Jugada> jugadas;
+    private ListaCircular<Jugador> jugadores;
+    private Jugada ganadora;
 
-   public Truco(Palo paloTriunfo, Palo paloLider, Lista<Carta> cartas, Carta valiosa) {
-       this.paloTriunfo = paloTriunfo;
-       this.paloLider = paloLider;
-       this.cartas = cartas;
-       this.valiosa = valiosa;
+   public Truco(Palo triunfo, ListaCircular<Jugador> jugadores){
+       this.triunfo = triunfo;
+       this.jugadores = jugadores;
+       this.jugadas = new Lista<>();
+       this.lider = null;
    }
 
     /**
-     * regresa el palo del triunfo.
-     * @return
+     * Pide cartas a todos los jugadores y devuelve al jugador que ganó el truco.
+     * @param ganador el jugador que ganó el truco anterior o null si no hay uno.
      */
-   public Palo getPaloTriunfo() {
-       return paloTriunfo;
-   }
-   /**
-    * regresa el palo del lider.
-    * @return
-    */
-   public Palo getPalolider() {
-       return paloLider;
-   }
+    public void jugarTruco(Jugador ganador) {
+        Carta carta;
+        Jugador jugador;
 
-    /**
-     * regresa la lista de cartas.
-     * @return
-     */
-   public Lista<Carta> getCartas() {
-       return cartas;
-   }
+        ListaCircular.Iterador<Jugador> iterador = jugadores.iterador();
+        iterador.moveBefore(ganador);
 
-    /**
-     * regresa la carta mas valiosa.
-     * @return
-     */
-   public Carta getValiosa() {
-       return valiosa;
-   }
+        for (int i = 0; i < jugadores.longitud; i++) {
+            jugador = iterador.next();
 
-    /**
-     * establece el palo del triunfo.
-     * @param paloTriunfo
-     */
-    public void setPaloTriunfo(Palo paloTriunfo) {
-        this.paloTriunfo = paloTriunfo;
-    }
-
-    /**
-     * establece el palo del lider.
-     * @param paloLider
-     */
-    public void setPaloLider(Palo paloLider) {
-        this.paloLider = paloLider;
-    }
-
-    /**
-     * establece la lista de cartas.
-     * @param cartas
-     */
-    public void setCartas(Lista<Carta> cartas) {
-        this.cartas = cartas;
-    }
-
-    /**
-     * establece la carta mas valiosa.
-     * @param valiosa
-     */
-    public void setValiosa(Carta valiosa) {
-        this.valiosa = valiosa;
-    }
-
-    /**
-     * establece una carta como el palo de triunfo.
-     * @param carta
-     */
-    public void establecerPaloTriunfo(Carta carta){
-        this.paloTriunfo = carta.getPalo();
-    }
-
-    /**
-     * determina la mejor carta.
-     * @return
-     */
-    public Carta determinarMejorCarta(){
-        Nodo<Carta> cartaActual = cartas.cabeza;
-
-        while (cartaActual != null){
-            if ((cartaActual.elemento.getNumero() == 14) || (cartaActual.elemento.getNumero() == 0) || (cartaActual.elemento.getPalo().equals(paloTriunfo) && cartaActual.elemento.getNumero() == 13)
-            || (cartaActual.elemento.getPalo().equals(paloTriunfo) && cartaActual.elemento.getNumero() == 13)) {
-                valiosa = cartaActual.elemento;
-
-                return valiosa;
-            }
-            cartaActual = cartaActual.siguiente;
+            System.out.println("==========================");
+            System.out.println("Comienza el turno del jugador " + jugador.getNombre() + ".");
+            mostrarTriunfoYLider();
+            mostrarCartasJugadas();
+            carta = jugador.elegirCarta(lider);
+            jugarCarta(carta, jugador);
         }
-        return null;
+
+        ganadora = determinarJugadaGanadora();
+        mostrarGanador();
     }
+
     /**
-     * agrega una carta a la mano.
-     * @param carta
+     * Muestra al jugador que ganó el truco.
      */
-    public void agregarCarta(Carta carta){
-        cartas.agregaFinal(carta);
+    private void mostrarGanador() {
+        System.out.println("==========================");
+        System.out.println("El jugador " + ganadora.getJugador().getNombre() + " ganó el truco.");
+    }
+
+    /**
+     * Muestra las cartas jugadas.
+     */
+    private void mostrarCartasJugadas() {
+
+        if (jugadas.isEmpty())
+            System.out.println("No hay cartas jugadas.");
+
+        IteradorLista<Jugada> iterador = jugadas.iterador();
+
+        while (iterador.hasNext()) {
+            Jugada jugada = iterador.next();
+            System.out.println("El jugador " +  jugada.getJugador().getNombre() + " jugó " + jugada.getCarta() + ".");
+        }
+    }
+
+    /**
+     * Muestra el palo del triunfo y el palo líder.
+     */
+    private void mostrarTriunfoYLider() {
+        if (triunfo == null)
+            System.out.println("No hay palo del triunfo en esta ronda.");
+        else
+            System.out.println("El palo del triunfo es: " + triunfo + ".");
+
+        if (lider == null)
+            System.out.println("El palo líder no ha sido definido.");
+        else
+            System.out.println("El palo líder es: " + lider + ".");
+    }
+
+    /**
+     * Devuelve el jugador que ganó el truco.
+     * @return el jugador que ganó el truco.
+     */
+    public Jugador getGanador() {
+        return ganadora.getJugador();
+    }
+
+    /**
+     * Determina la jugada ganadora del truco. Esta se determina usando las siguientes reglas:
+     *
+     * <lo>
+     *     <li>La primera jugada con un Mago.</li>
+     *     <li>La mayor carta con el palo del triunfo.</li>
+     *     <li>La mayor carta con el palo líder.</li>
+     *     <li>El primer bufón.</li>
+     * </lo>
+     *
+     * @return la jugada ganadora.
+     */
+    private Jugada determinarJugadaGanadora() {
+
+        IteradorLista<Jugada> iterador = jugadas.iterador();
+        iterador.start();
+
+        Jugada jugadaConMayorPaloDelTriunfo = null;
+        Jugada jugadaConMayorPaloLider = null;
+        Jugada jugadaConPrimerBufon = null;
+
+        while (iterador.hasNext()){
+            Jugada jugadaActual = iterador.next();
+
+            int numero = jugadaActual.getCarta().getNumero();
+            Palo palo = jugadaActual.getCarta().getPalo();
+
+            if (numero == 14)
+                return jugadaActual;
+
+            if (triunfo != null) {
+                if (palo.equals(triunfo) && numero != 0) {
+                    if (jugadaConMayorPaloDelTriunfo == null)
+                        jugadaConMayorPaloDelTriunfo = jugadaActual;
+                    else if (numero > jugadaConMayorPaloDelTriunfo.getCarta().getNumero())
+                        jugadaConMayorPaloDelTriunfo = jugadaActual;
+                }
+            }
+
+
+            if (palo.equals(lider)) {
+                if (jugadaConMayorPaloLider == null)
+                    jugadaConMayorPaloLider = jugadaActual;
+                else if (numero > jugadaConMayorPaloLider.getCarta().getNumero())
+                    jugadaConMayorPaloLider = jugadaActual;
+            }
+
+            if (numero == 0) {
+                if (jugadaConPrimerBufon == null)
+                    jugadaConPrimerBufon = jugadaActual;
+            }
+        }
+
+        if (jugadaConMayorPaloDelTriunfo != null)
+            return jugadaConMayorPaloDelTriunfo;
+        else if (jugadaConMayorPaloLider != null)
+            return jugadaConMayorPaloLider;
+
+        return jugadaConPrimerBufon;
+    }
+
+    /**
+     * Juega una carta y agrega la jugada a la lista de jugadas.
+     * @param carta la carta a jugar.
+     * @param jugador el jugador que juega la carta.
+     */
+    private void jugarCarta(Carta carta, Jugador jugador){
+
+        if (lider == null && (carta.getNumero() == 0 || carta.getNumero() == 14))
+            lider = null;
+        else if (lider == null)
+            lider = carta.getPalo();
+
+        jugadas.add(new Jugada(carta, jugador));
+    }
+
+
+    /**
+     * Método que muestra el historial del truco.
+     */
+    public void mostrarTruco() {
+
+        System.out.println("Se jugaron las siguientes cartas:");
+
+        IteradorLista<Jugada> iterador = jugadas.iterador();
+        iterador.start();
+
+        while (iterador.hasNext()) {
+            Jugada jugadaActual = iterador.next();
+            jugadaActual.mostrarJugada();
+        }
+
+        System.out.println("Ganó el jugador: " + ganadora.getJugador().getNombre());
     }
 }
 
