@@ -9,6 +9,10 @@ import java.io.InputStreamReader;
  *
  * Notemos que esta clase utiliza el patrón Singleton, por lo que debe utilizarse siempre como
  * > cli = CLI.getInstance();
+ *
+ * La clase además guarda una referencia al juego para poder mostrar información al jugador
+ * durante la partida como el historial de la partida, el resumen de la misma, o para realizar
+ * acciones como detener la partida y mostrar ayuda.
  */
 public class CLI {
 
@@ -71,30 +75,35 @@ public class CLI {
         int numero;
 
         while (true) {
-            System.out.print(mensaje + "\n > ");
             try {
+                System.out.print(mensaje + "\n > ");
                 String linea = input.readLine();
 
                 if (extras) {
                     if (linea.equals("h")) {
                         Juego juego = getJuego();
                         juego.mostrarHistorial();
+                        continue;
                     }
 
                     if (linea.equals("r")) {
                         Juego juego = getJuego();
                         juego.mostrarResumen();
+                        continue;
                     }
 
                     if (linea.equals("q")) {
                         Juego juego = getJuego();
                         juego.terminar();
+                        continue;
                     }
 
                     if (linea.equals("?")) {
                         Juego juego = getJuego();
                         juego.mostrarAyuda();
+                        continue;
                     }
+
                 }
 
                 numero = Integer.parseInt(linea);
@@ -132,29 +141,33 @@ public class CLI {
         int numero;
 
         while (true) {
-            System.out.print(mensaje + "\n > ");
             try {
+                System.out.print(mensaje + "\n > ");
                 String linea = input.readLine();
 
                 if (extras) {
                     if (linea.equals("h")) {
                         Juego juego = getJuego();
                         juego.mostrarHistorial();
+                        continue;
                     }
 
                     if (linea.equals("r")) {
                         Juego juego = getJuego();
                         juego.mostrarResumen();
+                        continue;
                     }
 
                     if (linea.equals("q")) {
                         Juego juego = getJuego();
                         juego.terminar();
+                        continue;
                     }
 
                     if (linea.equals("?")) {
                         Juego juego = getJuego();
                         juego.mostrarAyuda();
+                        continue;
                     }
                 }
 
@@ -188,48 +201,94 @@ public class CLI {
      * </ul></p>
      *
      * @param mensaje El mensaje que se usa para pedir la cadena.
-     * @param validos Las formas válidas que puede tomar la cadena.
      * @return La cadena introducida por el usuario.
      */
-    public String pedirCadena(String mensaje, Lista<String> validos, boolean extras) {
+    public String pedirCadena(String mensaje) {
         String cadena;
 
         while (true) {
-            System.out.print(mensaje + "\n > ");
-
             try {
+                System.out.print(mensaje + "\n > ");
                 cadena = input.readLine();
 
-                if (extras) {
-                    if (cadena.equals("h")) {
-                        Juego juego = getJuego();
-                        juego.mostrarHistorial();
-                    }
-
-                    if (cadena.equals("r")) {
-                        Juego juego = getJuego();
-                        juego.mostrarResumen();
-                    }
-
-                    if (cadena.equals("q")) {
-                        Juego juego = getJuego();
-                        juego.terminar();
-                    }
-
-                    if (cadena.equals("?")) {
-                        Juego juego = getJuego();
-                        juego.mostrarAyuda();
-                    }
+                if (cadena.length() < 1) {
+                    System.out.println("La cadena ingresada debe contener al menos un caracter. Intente de nuevo.");
+                    continue;
                 }
 
-                if (validos == null) {
-                    return cadena;
+                return cadena;
+
+            } catch (IOException e) {
+                System.out.println("Error al leer la entrada. Intente de nuevo.");
+            }
+        }
+
+    }
+
+    /**
+     * Pide una cadena al usuario usando el mensaje provisto, y si la cadena no está vacía y es una cadena
+     * válida, la devuelve. De otro modo, lanza una excepción.
+     *
+     * <p>
+     * Si <code>extras == true</code> se pueden introducir las siguientes cadenas:
+     *
+     * <ul>
+     * <li>r -> se muestra un resumen del juego y vuelve a pedir la cadena.</li>
+     * <li>q -> se muestra un resumen del juego y se termina el mismo.</li>
+     * <li>h -> se muestra el historial del juego y vuelve a pedir la cadena.</li>
+     * <li>? -> se muestra la ayuda del juego y vuelve a pedir la cadena.</li>
+     * </ul></p>
+     *
+     * @param mensaje El mensaje que se usa para pedir la cadena.
+     * @return La cadena introducida por el usuario.
+     */
+    public Palo pedirPalo(String mensaje) {
+        String cadena;
+
+        Lista<Palo> palos = new Lista<>(new Palo[]{
+                new Palo("enanos"),
+                new Palo("elfos"),
+                new Palo("gigantes"),
+                new Palo("humanos")
+        });
+
+        Lista<String> nombrePalos = new Lista<>(new String[]{
+                "enanos", "elfos", "gigantes", "humanos"
+        });
+
+        while (true) {
+            try {
+                System.out.print(mensaje + "\n > ");
+                cadena = input.readLine();
+
+                if (cadena.equals("h")) {
+                    Juego juego = getJuego();
+                    juego.mostrarHistorial();
+                    continue;
                 }
 
-                if (validos.contains(cadena))
-                    return cadena;
+                if (cadena.equals("r")) {
+                    Juego juego = getJuego();
+                    juego.mostrarResumen();
+                    continue;
+                }
 
-                System.out.println("La cadena debe ser alguna de las siguientes: " + validos + ".");
+                if (cadena.equals("q")) {
+                    Juego juego = getJuego();
+                    juego.terminar();
+                    continue;
+                }
+
+                if (cadena.equals("?")) {
+                    Juego juego = getJuego();
+                    juego.mostrarAyuda();
+                    continue;
+                }
+
+                if (nombrePalos.contains(cadena))
+                    return new Palo(cadena);
+
+                System.out.println("La cadena debe ser alguna de las siguientes: " + palos + ".");
 
             } catch (IOException e) {
                 System.out.println("Error al leer la entrada. Intente de nuevo.");
