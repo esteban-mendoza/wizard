@@ -8,7 +8,6 @@ class Iterador<T> implements IteradorLista<T> {
     public Nodo<T> anterior;
     public Nodo<T> siguiente;
 
-
     public Iterador(Lista<T> lista) {
         this.lista = lista;
         siguiente = lista.cabeza;
