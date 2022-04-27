@@ -1,5 +1,8 @@
 import utils.colecciones.IteradorLista;
 import utils.colecciones.Lista;
+import utils.colecciones.ListaCircular;
+
+import java.util.Objects;
 
 /**
  * Clase que implementa las acciones de un jugador.
@@ -10,8 +13,14 @@ public class Jugador {
     private CLI cli;
     private Lista<Resultado> resultados;
 
-    Jugador(){
-        this.nombre = pedirNombre();
+    Jugador() {
+        this.nombre = null;
+        this.mano = new Mano();
+        this.resultados = new Lista<>();
+    }
+
+    Jugador(String nombre) {
+        this.nombre = nombre;
         this.mano = new Mano();
         this.resultados = new Lista<>();
     }
@@ -19,9 +28,10 @@ public class Jugador {
     /**
      * Método que pide al usuario el nombre del jugador.
      */
-    private String pedirNombre() {
+    public void setNombre(ListaCircular<Jugador> jugadores) {
         cli = CLI.getInstance();
-        return cli.pedirCadena("Introduce el nombre del jugador: ");
+        String nombre = cli.pedirNombre("Introduce el nombre del jugador: ", jugadores);
+        this.nombre = nombre;
     }
 
     /**
@@ -182,11 +192,38 @@ public class Jugador {
     }
 
     /**
+     * Elemento que dice si dos jugadores son iguales usando como criterio que tengan el mismo nombre
+     * @param o - objeto que se desea comparar
+     * @return <code>true</code> si el objeto es igual al jugador o <code>false</code> en otro caso
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Jugador jugador = (Jugador) o;
+        return nombre.equals(jugador.nombre);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nombre);
+    }
+
+    /**
      * Método que devuelve el nombre del jugador.
      * @return nombre del jugador.
      */
     @Override
     public String toString() {
         return nombre;
+    }
+
+    /**
+     * Muestra el avance de la última ronda del jugador
+     */
+    public void mostrarAvanceDeRonda() {
+        Resultado resultado = resultados.peekLast();
+        System.out.println("El jugador ha ganado " + resultado.getnTrucosGanados() +
+                " trucos de " + resultado.getApuesta() + " apostados.");
     }
 }

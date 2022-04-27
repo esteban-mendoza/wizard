@@ -19,9 +19,18 @@ public class Juego {
      * Jugar la partida.
      */
     public void jugar() {
+        partida.inicializarPartida();
         mostrarAyuda();
         partida.iniciarPartida();
         terminar();
+    }
+
+    /**
+     * Devuelve la partida
+     * @return partida
+     */
+    public Partida getPartida() {
+        return partida;
     }
 
     /**

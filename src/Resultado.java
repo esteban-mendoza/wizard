@@ -20,6 +20,14 @@ public class Resultado {
     }
 
     /**
+     * Devuelve el número de trucos que ha ganado el jugador en la ronda actual
+     * @return el número de trucos que ha ganado el jugador en la ronda actual
+     */
+    public int getnTrucosGanados() {
+        return nTrucosGanados;
+    }
+
+    /**
      * Aumenta en 1 el número de trucos ganados
      */
     public void ganarTruco() {

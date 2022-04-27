@@ -13,6 +13,17 @@ public class Partida {
      * Constructor de la clase Partida
      */
     public Partida() {
+        numeroJugadores = 0;
+        numeroRondas = 0;
+        jugadores = new ListaCircular<>();
+        historial = new Historial();
+        semilla = 0;
+    }
+
+    /**
+     * Método que inicializa los valores necesarios para la partida.
+     */
+    public void inicializarPartida() {
         numeroJugadores = pedirNumeroJugadores();
         numeroRondas = determinarNumeroRondas();
         jugadores = instanciarJugadores();
@@ -27,6 +38,14 @@ public class Partida {
     private int pedirNumeroJugadores() {
         cli = CLI.getInstance();
         return cli.pedirEntero("Ingrese el numero de jugadores (entre 3 y 6): ", 3, 6, false);
+    }
+
+    /**
+     * Método que devuelve la lista circular de jugadores
+     * @return la lista circular de jugadores
+     */
+    public ListaCircular<Jugador> getJugadores() {
+        return jugadores;
     }
 
     /**
@@ -54,7 +73,9 @@ public class Partida {
     private ListaCircular<Jugador> instanciarJugadores() {
         jugadores = new ListaCircular<>();
         for (int i = 0; i < numeroJugadores; i++) {
-            jugadores.add(new Jugador());
+            Jugador jugador = new Jugador();
+            jugador.setNombre(jugadores);
+            jugadores.add(jugador);
         }
 
         return jugadores;
@@ -83,8 +104,11 @@ public class Partida {
 
             historial.addRonda(ronda);
 
-            ronda.jugarRonda();
+            ronda.jugarRonda(semilla);
             ultimoGanador = ronda.getGanador();
+            // Actualizamos la semilla para que al revolver durante
+            // la siguiente ronda no tengamos las cartas en el mismo orden
+            semilla += 100;
         }
     }
 

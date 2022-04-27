@@ -45,10 +45,9 @@ public class ListaCircular<T> {
             if (elemento == null)
                 return;
             start();
-            while (!elemento.equals(next())) {
+            while (!elemento.equals(siguiente.elemento)) {
                 next();
             }
-            previous();
         }
 
         @Override
@@ -116,6 +115,16 @@ public class ListaCircular<T> {
         agregaFinal(elemento);
     }
 
+    /**
+     * Determina si la lista está vacía
+     * @return <code>true</code> si la lista está vacía y <code>false</code> en otro caso
+     */
+    public boolean isEmpty() {
+        if (longitud == 0 || cabeza == null) {
+            return true;
+        }
+        return false;
+    }
 
     /**
      * Agrega un elemento al inicio de la lista. Si la lista no tiene elementos,
@@ -219,6 +228,29 @@ public class ListaCircular<T> {
         return longitud;
     }
 
+    /**
+     * Determina si el elemento dado está contenido en la lista
+     * @param elemento elemento dado
+     * @return <code>true</code> si el elemento forma parte de la lista y <code>false</code> en otro caso
+     */
+    public boolean contains(T elemento) {
+        if (elemento == null)
+            throw new IllegalArgumentException("El elemento provisto es null");
+
+        Nodo<T> nodo = cabeza;
+
+        if (nodo.elemento.equals(elemento))
+            return true;
+
+        for (int i = 0; i < longitud - 1; i++) {
+            nodo = nodo.siguiente;
+
+            if (nodo.elemento.equals(elemento))
+                return true;
+        }
+
+        return false;
+    }
 
     /**
      * Regresa una representación en cadena de la colección.

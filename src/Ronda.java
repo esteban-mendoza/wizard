@@ -88,8 +88,9 @@ public class Ronda {
 
     /**
      * Jugar una ronda.
+     * @param semilla - la semilla aleatoria
      */
-    public void jugarRonda() {
+    public void jugarRonda(int semilla) {
 
         System.out.println("==========================");
         System.out.println("Comienza la ronda " + nTrucos + ".");
@@ -111,10 +112,6 @@ public class Ronda {
         }
 
         finalizarRonda();
-
-        // Actualizamos la semilla para que al revolver durante
-        // la siguiente ronda no tengamos las cartas en el mismo orden
-        semilla += 100;
     }
 
     /**

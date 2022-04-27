@@ -32,6 +32,7 @@ public class Truco {
 
             System.out.println("==========================");
             System.out.println("Comienza el turno del jugador " + jugador.getNombre() + ".");
+            jugador.mostrarAvanceDeRonda();
             mostrarTriunfoYLider();
             mostrarCartasJugadas();
             carta = jugador.elegirCarta(lider);

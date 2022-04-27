@@ -1,4 +1,5 @@
 import utils.colecciones.Lista;
+import utils.colecciones.ListaCircular;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -203,7 +204,7 @@ public class CLI {
      * @param mensaje El mensaje que se usa para pedir la cadena.
      * @return La cadena introducida por el usuario.
      */
-    public String pedirCadena(String mensaje) {
+    public String pedirNombre(String mensaje, ListaCircular<Jugador> jugadores) {
         String cadena;
 
         while (true) {
@@ -213,6 +214,14 @@ public class CLI {
 
                 if (cadena.length() < 1) {
                     System.out.println("La cadena ingresada debe contener al menos un caracter. Intente de nuevo.");
+                    continue;
+                }
+
+                if (jugadores == null || jugadores.isEmpty())
+                    return cadena;
+
+                if (jugadores.contains(new Jugador(cadena))) {
+                    System.out.println("El nombre ya ha sido elegido por otro jugador. Intente de nuevo.");
                     continue;
                 }
 
